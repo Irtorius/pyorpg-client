@@ -2,6 +2,7 @@ import time
 import os.path
 
 from pgu import gui
+from gui.dialogs import alertMessageDialog
 from database import *
 from gamelogic import *
 import global_vars as g
@@ -9,7 +10,6 @@ from objects import *
 from constants import *
 from packettypes import *
 from utils.utils import *
-from gui.dialogs import alertMessageDialog
 
 
 class DataHandler():
@@ -63,6 +63,9 @@ class DataHandler():
 
         elif packetType == ServerPackets.SPlayerData:
             self.handlePlayerData(jsonData)
+
+        elif packetType == ServerPackets.SPlayerLevel:
+            self.handlePlayerLevel(jsonData)
 
         elif packetType == ServerPackets.SPlayerMove:
             self.handlePlayerMove(jsonData)
@@ -150,12 +153,7 @@ class DataHandler():
         msg = jsonData[0]['msg']
         creatingAccount = 'Your account has been created!'
 
-        if msg == creatingAccount:
-            # show msg and disconnect until log in
-            # todo: this is a stupid way of checking for account created
-            g.gameEngine.disconnect()
-            
-        alertMessageDialog(msg)
+        alertMessageDialog(msg=msg)
 
     def handleAllChars(self, jsonData):
         # pass it on to the character selection
